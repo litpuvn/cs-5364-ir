@@ -5,20 +5,21 @@ from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 
 
-df = pd.read_csv('tweets/filtered_data.txt', sep="\000")
-df.columns =['id', 'tweet_date', 'tweet']
+df = pd.read_csv('tweets/filtered_data.txt', sep='\000')
+df.columns =['id','tweet']
 
 stemmer = SnowballStemmer("english")
 stop_words = stopwords.words('english')
 
 ## tokenization and remove stopwords
-# df['words'] = df['tweet'].apply(lambda x: [item for item in x.split(' ') if item not in stop_words])
-df['words'] = df['tweet'].apply(lambda x: ' '.join([word for word in x.split(' ') if word not in stop_words]))
+df['tweet'] = df['tweet'].apply(lambda x: ' '.join([word for word in x.split(' ') if word not in stop_words]))
 
 ## stem words
-df['stemmed'] = df['words'].apply(lambda x: ' '.join([stemmer.stem(y) for y in x.decode('utf-8').split(' ')]))
-df['stemmed'].head()
-#
+df['tweet'] = df['tweet'].apply(lambda x: ' '.join([stemmer.stem(y) for y in x.decode('utf-8').split(' ')]))
+df['tweet'].head()
+
+df.to_csv("tweets/clean_tweets.csv")
+# #
 #
 # ## vectorize with tf-idf
 #

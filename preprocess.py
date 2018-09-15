@@ -1,31 +1,21 @@
-import codecs
+from sklearn.feature_extraction.text import TfidfVectorizer
+import numpy as np
+import pandas as pd
+from nltk.stem.snowball import SnowballStemmer
+from nltk.corpus import stopwords
 
-## Stepp 1. Read line by line
-tweet_count = 0
-with codecs.open("tweets/filtered_data.txt","w", "utf-8") as f:
-    with open("C:/Users/shine/informationdata/2017_08_26_stream.txt", encoding='utf-8') as ins:
-        counter = 0
-        for line in ins:
-            ## Step 2. Extract important content per line
-            parts = line.split("\x01")
-            if len(parts) < 2:
-                continue
-            tweet_id = parts[0]
-            tweet_text = parts[1]
 
-            if len(parts)>= 3:
-                tweet_geo = parts[2]
-            else:
-                tweet_geo = ''
+df = pd.read_csv('tweets/filtered_data.txt', sep='\000')
+df.columns =['id','tweet']
 
-            if len(parts)>= 6:
-                tweet_date = parts[6]
-            else:
-                tweet_date = ''
-            print('id：', tweet_id, 'date:', tweet_date, 'geo:', tweet_geo, "text:", tweet_text)
+stemmer = SnowballStemmer("english")
+stop_words = stopwords.words('english')
 
-            ##Step 3. Write important content to other file.
-            f.write(tweet_id + '\000' + tweet_date + '\000' + tweet_text + '\r\n')
-            tweet_count+= 1
+## tokenization and remove stopwords
+df['tweet'] = df['tweet'].apply(lambda x: ' '.join([word for word in x.split(' ') if word not in stop_words]))
 
-print("Total tweet count", tweet_count)
+## stem words
+df['tweet'] = df['tweet'].apply(lambda x: ' '.join([stemmer.stem(y) for y in x.split(' ')]))
+df['tweet'].head()
+
+df.to_csv("tweets/clean_tweets.csv")
