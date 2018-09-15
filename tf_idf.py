@@ -5,26 +5,18 @@ import pandas as pd
 from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
 
-df = pd.read_csv('tweets/clean_tweets.csv', sep=',')
-df = df.dropna()
+df = pd.read_table('tweets/relevant_tweets.txt')
+df.columns = ['tweet']
+documents = df['tweet']
 
-## vectorize with term frequency
-cvec = CountVectorizer()
-cvec_weights = cvec.fit_transform(df['tweet'])
-weights = np.asarray(cvec_weights.mean(axis=0)).ravel().tolist()
-weights_df = pd.DataFrame({'term': cvec.get_feature_names(), 'weight': weights})
-weights_df.sort_values(by='weight', ascending=False).head(20)
-print (weights_df)
+query = "love food hurricane harvey texas houston flood road drink water bottle"
 
-## vectorize with tf-idf
+tvec = TfidfVectorizer(vocabulary=query.split(' '))
+tvec_tfidf = tvec.fit_transform(documents)
+tvec_tfidf_as_array = tvec_tfidf.toarray()
 
-tvec = TfidfVectorizer(min_df=.0025)
-tvec_weights = tvec.fit_transform(df['tweet'])
-weights = np.asarray(tvec_weights.mean(axis=0)).ravel().tolist()
-weights_df = pd.DataFrame({'term': tvec.get_feature_names(), 'weight': weights})
-weights_df.sort_values(by='weight', ascending=False).head(20)
+print (tvec_tfidf_as_array)
 
-print (weights_df)
-
-print("done")
