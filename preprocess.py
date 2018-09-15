@@ -18,4 +18,4 @@ df['tweet'] = df['tweet'].apply(lambda x: ' '.join([word for word in x.split(' '
 df['tweet'] = df['tweet'].apply(lambda x: ' '.join([stemmer.stem(y) for y in x.split(' ')]))
 df['tweet'].head()
 
-df.to_csv("tweets/clean_tweets.csv")
+df.to_csv("tweets/clean_tweets.csv", mode = 'w', index=False)
