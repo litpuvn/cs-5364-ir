@@ -24,11 +24,13 @@ with codecs.open("tweets/filtered_data.txt","w", "utf-8") as f:
             #     tweet_date = parts[6]
             # else:
             #     tweet_date = ''
-            print('id：', tweet_id, "text:", tweet_text)
+
+            lower_case_tweet = tweet_text.lower()
+            print('id：', tweet_id, "text:", lower_case_tweet)
 
             ##Step 3. Write important content to other file.
             # f.write(tweet_id + '\000' + tweet_date + '\000' + tweet_text + '\r\n')
-            f.write(tweet_id + '\000' + tweet_text + '\r\n')
+            f.write(tweet_id + '\000' + lower_case_tweet + '\r\n')
             tweet_count+= 1
 
 print("Total tweet count", tweet_count)

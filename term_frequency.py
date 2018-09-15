@@ -7,9 +7,9 @@ from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 import operator
 
-df = pd.read_csv('tweets/clean_tweets.csv', sep=',')
-df = df.dropna()
-extra_stopwords = ['@', '-', '_']
+df = pd.read_table('tweets/relevant_tweets.txt')
+df.columns = ['tweet']
+extra_stopwords = ['@', '-', '_', '','i',"i'm", '&',"it","la","the","de","en","que","this","el","floyd"]
 
 tweets = df['tweet']
 
@@ -25,7 +25,7 @@ for tweet in tweets:
             terms[term] = 1
 
 # extract high frequency terms
-min_threshold=1500
+min_threshold=1000
 frequency_list = terms.keys()
 results = []
 for word in frequency_list:
@@ -36,11 +36,10 @@ for word in frequency_list:
     results.append(tuple)
 
 byFreq = sorted(results, key=lambda word: word[1], reverse=True)
-print("keys:", len(byFreq))
-print("done")
+print("terms:", len(byFreq))
 
 ## plot frequent terms using 10 top words
-sorted_wfreq = byFreq[0:10]
+sorted_wfreq = byFreq[0:20]
 final_wfreq = dict()
 for word, freq in sorted_wfreq:
     final_wfreq[word] = freq
