@@ -3,14 +3,19 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import gensim
 from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
+import random
 
 
-raw_documents = ["I'm taking the show on the road.",
-                 "My socks are a force multiplier.",
-             "I am the barber who cuts everyone's hair who doesn't cut their own.",
-             "Legend has it that the mind is a mad monkey.",
-            "I make my own fun."]
+df = pd.read_table('tweets/relevant_tweets_utf8.txt')
+df.columns = ['tweet']
 
+tweets = []
+for tweet in df['tweet']:
+    tweet = bytes(tweet, 'utf-8').decode()
+    tweets.append(tweet)
+
+raw_documents = random.sample(tweets, 20)
 
 def create_binary_vector(raw_attr, entire_attributes):
     vec1 = []
