@@ -23,7 +23,7 @@ print(document_term_matrix_as_array)
 
 good_documents = []
 for d in document_term_matrix_as_array:
-    if sum(d) >= 3:
+    if sum(d) >= 4:
         good_documents.append(d)
 ## seanbon
 # uniform_data = np.random.rand(10, 12)
