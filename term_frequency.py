@@ -9,12 +9,13 @@ import operator
 
 df = pd.read_table('tweets/relevant_tweets.txt')
 df.columns = ['tweet']
-extra_stopwords = ['@', '-', '_', '','i',"i'm", '&',"it","la","the","de","en","que","this","el","floyd"]
+extra_stopwords = ['@', '-', '_','—', '','i',"i'm", '&',"it","la","the","de","en","que","this","el","floyd"]
 
 tweets = df['tweet']
 
 terms = dict()
 for tweet in tweets:
+    tweet = bytes(tweet, 'utf-8').decode()
     tweet_terms = tweet.split(" ")
     for term in tweet_terms:
         if term in extra_stopwords:
@@ -58,12 +59,12 @@ if show_plot == True:
     fig, ax = plt.subplots()
     width = 0.56 # the width of the bars
     ind = np.arange(len(words_count))  # the x locations for the groups
-    ax.barh(ind, words_count, width, color="blue")
+    ax.barh(ind, words_count, width, color="#3366cc")
     ax.set_yticks(ind+width/2)
     ax.set_yticklabels(words_names, minor=False)
     plt.title('Word Frequency')
     plt.xlabel('Frequencies')
     plt.ylabel('Words')
     for i, v in enumerate(words_count):
-        ax.text(v + 0.2, i - .15, str(v), color='blue', fontweight='bold')
+        ax.text(v + 0.2, i - .15, str(v), color='black', fontweight='bold')
     plt.show()
