@@ -48,10 +48,9 @@ ax.barh(ind, IDF, width, color="#3366cc")
 ax.set_yticks(ind+width/2)
 ax.set_yticklabels(array_query, minor=False)
 
-# plt.bar(IDF,array_query,0.3,color="green")
-# plt.xlabel("IDF")
-# plt.ylabel("query terms")
-# plt.title("IDF Bar Chart")
+plt.xlabel("IDF")
+plt.ylabel("query terms")
+plt.title("IDF Bar Chart")
 plt.show()
 
 
