@@ -7,7 +7,7 @@ import pandas as pd
 import random
 
 
-df = pd.read_table('tweets/relevant_tweets_utf8.txt')
+df = pd.read_table('tweets/relevant_tweets.txt')
 df.columns = ['tweet']
 
 tweets = []
