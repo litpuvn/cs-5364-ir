@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 import numpy as np
+from scipy.cluster.hierarchy import fcluster
 
 np.random.seed(4711)  # for repeatability of this tutorial
 a = np.random.multivariate_normal([10, 0], [[3, 1], [1, 4]], size=[100,])
@@ -30,4 +31,14 @@ dendrogram(
     leaf_rotation=90.,  # rotates the x axis labels
     leaf_font_size=8.,  # font size for the x axis labels
 )
+plt.show()
+
+####
+max_d = 50
+clusters = fcluster(Z, max_d, criterion='distance')
+clusters
+
+## visualize the result clusters
+plt.figure(figsize=(10, 8))
+plt.scatter(X[:,0], X[:,1], c=clusters, cmap='prism')  # plot points with cluster dependent colors
 plt.show()
