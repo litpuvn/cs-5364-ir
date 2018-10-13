@@ -2,6 +2,8 @@ from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 import numpy as np
 from scipy.cluster.hierarchy import fcluster
+from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
 
 def fancy_dendrogram(*args, **kwargs):
     max_d = kwargs.pop('max_d', None)
@@ -27,20 +29,28 @@ def fancy_dendrogram(*args, **kwargs):
             plt.axhline(y=max_d, c='k')
     return ddata
 
-np.random.seed(4711)  # for repeatability of this tutorial
-a = np.random.multivariate_normal([10, 0], [[3, 1], [1, 4]], size=[100,])
-b = np.random.multivariate_normal([0, 20], [[3, 1], [1, 4]], size=[50,])
-X = np.concatenate((a, b),)
-# print (X.shape)  # 150 samples with 2 dimensions
-# plt.scatter(X[:,0], X[:,1])
-# plt.show()
+df = pd.read_table('tweets/relevant_tweets.txt')
+df.columns = ['tweet']
+documents = df['tweet']
 
+query = "love food hurricane harvey texas houston flood road drink water bottle"
+tvec = TfidfVectorizer(vocabulary=query.split(' '))
+tvec_tfidf = tvec.fit_transform(documents)
+tvec_tfidf_as_nparray = tvec_tfidf.toarray()
 
+good_documents = []
+for d in tvec_tfidf_as_nparray:
+    if sum(d) > 1:
+        good_documents.append(d)
+        # np.append(good_documents, d)
 
 # generate the linkage matrix
-# Z = linkage(X, 'ward')
-# Z = linkage(X, 'single')
-Z = linkage(X, 'complete')
+# Z = linkage(good_documents, method='ward')
+# Z = linkage(good_documents, method='single', metric='cosine')
+# Z = linkage(good_documents, method='centroid')
+# Z = linkage(X, 'centroid')
+# Z = linkage(good_documents, method='complete', metric='cosine')
+Z = linkage(good_documents, method='average', metric='cosine')
 # Z = linkage(X, 'average')
 
 print(Z)
@@ -64,35 +74,36 @@ plt.ylabel('distance')
 #     leaf_font_size=12.,
 #     show_contracted=True,  # to get a distribution impression in truncated branches
 # )
-# dendrogram(
-#     Z,
-#     truncate_mode='lastp',  # show only the last p merged clusters
-#     p=12,  # show only the last p merged clusters
-#     leaf_rotation=90.,
-#     leaf_font_size=12.,
-#     show_contracted=True,  # to get a distribution impression in truncated branches
-# )
-
-max_d = 10
-fancy_dendrogram(
+dendrogram(
     Z,
     truncate_mode='lastp',  # show only the last p merged clusters
-    p=12,  # show only the last p merged clusters
+    p=20,  # show only the last p merged clusters
     leaf_rotation=90.,
     leaf_font_size=12.,
     show_contracted=True,  # to get a distribution impression in truncated branches
-    max_d=max_d,  # plot a horizontal cut-off line
-
 )
+
+# max_d = 21
+# fancy_dendrogram(
+#     Z,
+#     # orientation='right',
+#     truncate_mode='lastp',  # show only the last p merged clusters
+#     p=20,  # show only the last p merged clusters
+#     leaf_rotation=90.,
+#     leaf_font_size=12.,
+#     show_contracted=True,  # to get a distribution impression in truncated branches
+#     max_d=max_d,  # plot a horizontal cut-off line
+#
+# )
 
 plt.show()
 
 ####
-max_d = 50
-clusters = fcluster(Z, max_d, criterion='distance')
-clusters
-
-## visualize the result clusters
-plt.figure(figsize=(10, 8))
-plt.scatter(X[:,0], X[:,1], c=clusters, cmap='prism')  # plot points with cluster dependent colors
-plt.show()
+# max_d = 50
+# clusters = fcluster(Z, max_d, criterion='distance')
+# clusters
+#
+# ## visualize the result clusters
+# plt.figure(figsize=(10, 8))
+# plt.scatter(X[:,0], X[:,1], c=clusters, cmap='prism')  # plot points with cluster dependent colors
+# plt.show()
