@@ -48,10 +48,10 @@ for d in tvec_tfidf_as_nparray:
 # generate the linkage matrix
 # Z = linkage(good_documents, method='ward')
 # Z = linkage(good_documents, method='single', metric='cosine')
-# Z = linkage(good_documents, method='centroid')
+# Z = linkage(good_documents, method='centroid',  metric='cosine')
 # Z = linkage(X, 'centroid')
-# Z = linkage(good_documents, method='complete', metric='cosine')
-Z = linkage(good_documents, method='average', metric='cosine')
+Z = linkage(good_documents, method='complete', metric='cosine')
+# Z = linkage(good_documents, method='average', metric='cosine')
 # Z = linkage(X, 'average')
 
 print(Z)
@@ -75,27 +75,27 @@ plt.ylabel('distance')
 #     leaf_font_size=12.,
 #     show_contracted=True,  # to get a distribution impression in truncated branches
 # )
-dendrogram(
-    Z,
-    truncate_mode='lastp',  # show only the last p merged clusters
-    p=20,  # show only the last p merged clusters
-    leaf_rotation=90.,
-    leaf_font_size=12.,
-    show_contracted=True,  # to get a distribution impression in truncated branches
-)
-
-# max_d = 21
-# fancy_dendrogram(
+# dendrogram(
 #     Z,
-#     # orientation='right',
 #     truncate_mode='lastp',  # show only the last p merged clusters
 #     p=20,  # show only the last p merged clusters
 #     leaf_rotation=90.,
 #     leaf_font_size=12.,
 #     show_contracted=True,  # to get a distribution impression in truncated branches
-#     max_d=max_d,  # plot a horizontal cut-off line
-#
 # )
+
+max_d = 21
+fancy_dendrogram(
+    Z,
+    # orientation='right',
+    truncate_mode='lastp',  # show only the last p merged clusters
+    p=20,  # show only the last p merged clusters
+    leaf_rotation=90.,
+    leaf_font_size=12.,
+    show_contracted=True,  # to get a distribution impression in truncated branches
+    max_d=max_d,  # plot a horizontal cut-off line
+
+)
 
 plt.show()
 
