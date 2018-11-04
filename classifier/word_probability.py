@@ -1,6 +1,8 @@
 import pandas as pd
+from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import accuracy_score
 
-df = pd.read_csv("test.csv", sep=",", header=0)
+df = pd.read_csv("train.csv", sep=",", header=0)
 
 word_frequency = dict()
 class_frequency = dict()
@@ -58,34 +60,48 @@ voc_size = len(word_frequency)
 #         print("p(", w, "/", label, ")=", word_prob)
 
 ## compute the query class ###
-x_words = list(set(query_x.split()))
-max_prob = 0
-max_class = None
-for label, word_class_frequency in class_frequency.items():
-    if "count" in label:
-        continue
-    word_count = class_frequency[label + "-count"]
-    print("class:", label, "; word count:", word_count)
 
-    word_probs = dict()
-    for w in x_words:
-        word_fre = 0
-        if w in word_class_frequency:
-            word_fre = word_class_frequency[w]
-        word_prob = (word_fre + 1) / (word_count + voc_size)
-        print("p(", w, "/", label, ")=", word_prob)
-        if w not in word_probs:
-            word_probs[w] = word_prob
+df = pd.read_csv("test.csv", sep=",", header=0)
+y_true = []
+y_pred = []
+for _, row in df.iterrows():
+    query_x = row.iloc[1]
+    label = row.iloc[2]
+    y_true.append(label)
+    x_words = list(set(query_x.split()))
+    max_prob = 0
+    max_class = None
+    for label, word_class_frequency in class_frequency.items():
+        if "count" in label:
+            continue
+        word_count = class_frequency[label + "-count"]
+        print("class:", label, "; word count:", word_count)
 
-    my_prob = doc_class_frequency[label] / doc_count
-    for w in query_x.split():
-        my_prob = my_prob*word_probs[w]
+        word_probs = dict()
+        for w in x_words:
+            word_fre = 0
+            if w in word_class_frequency:
+                word_fre = word_class_frequency[w]
+            word_prob = (word_fre + 1) / (word_count + voc_size)
+            print("p(", w, "/", label, ")=", word_prob)
+            if w not in word_probs:
+                word_probs[w] = word_prob
 
-    print("label:", label, "; prob:", my_prob)
-    if max_prob < my_prob:
-        max_prob = my_prob
-        max_class = label
+        my_prob = doc_class_frequency[label] / doc_count
+        for w in query_x.split():
+            my_prob = my_prob*word_probs[w]
 
-print()
-print("Query:", query_x)
-print("predicted class:", max_class, "; prob:", max_prob)
+        print("label:", label, "; prob:", my_prob)
+        if max_prob < my_prob:
+            max_prob = my_prob
+            max_class = label
+
+    print()
+    print("Query:", query_x)
+    print("predicted class:", max_class, "; prob:", max_prob)
+    y_pred.append(max_class)
+
+
+precision, recall, f_score, _ = precision_recall_fscore_support(y_true=y_true, y_pred=y_pred)
+accuracy = accuracy_score(y_true=y_true, y_pred=y_pred)
+print("accuracy:", accuracy, "precision:", precision, "; recall:", recall, "; f-score:", f_score)
