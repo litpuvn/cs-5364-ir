@@ -5,6 +5,8 @@ from sklearn.feature_extraction.text import CountVectorizer #convert text commen
 from sklearn.feature_extraction.text import TfidfTransformer #use TF IDF transformer to change text vector created by count vectorizer
 from sklearn.svm import SVC# Support Vector Machine
 from sklearn.datasets import fetch_20newsgroups
+from sklearn import metrics
+
 
 
 df_train = pd.read_csv("hw_train_2_classes.csv", sep="|")
@@ -38,3 +40,8 @@ predicted = text_clf.predict(X_test_counts)
 
 print(predicted)
 print("Accuracy: {}%".format(text_clf.score(X_test_counts, y_test) * 100 ))
+
+print(metrics.classification_report(y_test, predicted))
+
+print(metrics.confusion_matrix(y_test, predicted))
+
