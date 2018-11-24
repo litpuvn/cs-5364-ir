@@ -22,12 +22,16 @@ for input_f in input_files:
     with open(input_f) as f:
         reader = csv.reader(f, delimiter='|', quotechar='"')
         next(reader)
-        with open("aid_request_" + input_f + '.csv', 'w', newline='') as csvfile:
+        with open("aid_" + input_f, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(["tweet_id", "datetime", "city", "state", "country", "gps", "polygon", "tweet"])
 
             for row in reader:
 
                 tweet = row[7]
+                tweet = tweet.encode()
+                udata = tweet.decode("utf-8", "ignore")
+                tweet = udata.encode("ascii", "ignore")
+                tweet = tweet.decode("ascii", "ignore")
                 if is_aid_request(tweet=tweet):
                     writer.writerow(row)
