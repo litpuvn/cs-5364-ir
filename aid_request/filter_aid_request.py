@@ -44,10 +44,10 @@ def is_aid_request(tweet):
 
 for input_f in input_files:
 
-    with open(input_f) as f:
+    with open(input_f, encoding="utf-8") as f:
         reader = csv.reader(f, delimiter='|', quotechar='"')
         next(reader)
-        with open("aid_request_" + input_f, 'w', newline='') as csvfile:
+        with open("aid_request_" + input_f, 'w', newline='', encoding="utf-8") as csvfile:
             writer = csv.writer(csvfile, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(["tweet"])
 
