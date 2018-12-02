@@ -31,8 +31,8 @@ start_with_stopwords = ["@", '#', 'http']
 
 
 def is_stop_word(word):
-    if word in my_stopwords:
-        return True
+    # if word in my_stopwords:
+    #     return True
 
     # startswith test
     for st in start_with_stopwords:
@@ -43,7 +43,8 @@ def is_stop_word(word):
 
 
 def pre_process_text(tweet):
-    words = [stemmer.stem(word.lower()) for word in tweet.split() if not is_stop_word(word.lower())]
+    # words = [stemmer.stem(word.lower()) for word in tweet.split() if not is_stop_word(word.lower())]
+    words = [word.lower() for word in tweet.split() if not is_stop_word(word.lower())]
 
     return ' '.join(words)
 
@@ -75,5 +76,5 @@ def clean_text_and_write_to_file(filename, df):
             writer.writerow([tweet_id, tweet, label])
 
 
-clean_text_and_write_to_file('train_hw4.csv', train)
-clean_text_and_write_to_file('test_hw4.csv', test)
+clean_text_and_write_to_file('no_train_hw4.csv', train)
+clean_text_and_write_to_file('no_test_hw4.csv', test)

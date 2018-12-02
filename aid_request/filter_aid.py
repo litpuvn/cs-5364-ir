@@ -28,6 +28,8 @@ for input_f in input_files:
             writer.writerow(["tweet_id", "datetime", "city", "state", "country", "gps", "polygon", "tweet"])
             with open("non_aid_" + input_f, 'w', newline='') as csvfile:
                 non_aid_writer = csv.writer(csvfile, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                non_aid_writer.writerow(["tweet_id", "datetime", "city", "state", "country", "gps", "polygon", "tweet"])
+
                 for row in reader:
 
                     tweet = row[7]
